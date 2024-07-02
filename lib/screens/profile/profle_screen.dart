@@ -32,39 +32,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
+        backgroundColor: Colors.blueAccent,
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-                width: double.infinity,
-                height: 200,
-                child: Column(
-                  children: [
-                    Text(
-                      "Nama: ${user.name}",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "Email: ${user.email}",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                        onPressed: () {
-                          signOutUser(context);
-                        },
-                        child: Text('Logout')),
-                  ],
-                )),
+            CircleAvatar(
+              radius: 100,
+              backgroundImage:
+                  user.image != null ? NetworkImage(user.image!) : null,
+              child: user.image == null ? Icon(Icons.person, size: 100) : null,
+            ),
             SizedBox(height: 20),
+            Text(
+              "${user.name}",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "${user.email}",
+              style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: () {
+                // Navigate to edit profile screen
+              },
+              icon: Icon(Icons.edit),
+              label: Text('Edit Profile'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 50),
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: () {
+                signOutUser(context);
+              },
+              icon: Icon(Icons.logout),
+              label: Text('Logout'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 50),
+              ),
+            ),
           ],
         ),
       ),

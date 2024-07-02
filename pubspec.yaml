@@ -38,6 +38,8 @@ dependencies:
   provider: ^6.1.2
   webview_flutter: ^4.8.0
   shared_preferences: ^2.2.3
+  firebase_storage: ^12.1.0
+  uuid: ^4.4.0
 
 dev_dependencies:
   flutter_test:

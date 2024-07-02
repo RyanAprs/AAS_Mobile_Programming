@@ -37,18 +37,41 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: double.infinity,
-              height: 200,
-              color: Colors.blueAccent,
-              padding: EdgeInsets.all(40),
-              child: Text(
-                "Welcome, ${user.name}",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(50),
+                bottomRight: Radius.circular(50),
+              ),
+              child: Container(
+                width: double.infinity,
+                height: 300,
+                color: Colors.blueAccent,
+                padding: EdgeInsets.all(40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "${user.name}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(width: 10),
+                        Icon(
+                          Icons.notifications,
+                          color: Colors.white,
+                          size: 34,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -61,45 +84,49 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: EdgeInsets.all(20),
                 children: <Widget>[
                   MenuOption(
-                      icon: Icons.download,
-                      label: 'GetData',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => GetDataScreen()),
-                        );
-                      }),
+                    icon: Icons.download,
+                    label: 'GetData',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GetDataScreen()),
+                      );
+                    },
+                  ),
                   MenuOption(
-                      icon: Icons.web,
-                      label: 'Web View',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WebViewScreen()),
-                        );
-                      }),
+                    icon: Icons.web,
+                    label: 'Web View',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WebViewScreen()),
+                      );
+                    },
+                  ),
                   MenuOption(
-                      icon: Icons.person,
-                      label: 'Profile',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfileScreen()),
-                        );
-                      }),
+                    icon: Icons.person,
+                    label: 'Profile',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProfileScreen()),
+                      );
+                    },
+                  ),
                   MenuOption(
-                      icon: Icons.edit,
-                      label: 'ToDoList',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => TodolistScreen()),
-                        );
-                      }),
+                    icon: Icons.edit,
+                    label: 'ToDoList',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TodolistScreen()),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -115,9 +142,12 @@ class MenuOption extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  const MenuOption(
-      {required this.icon, required this.label, required this.onTap, Key? key})
-      : super(key: key);
+  const MenuOption({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
