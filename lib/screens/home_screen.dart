@@ -17,6 +17,29 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  User? user;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  void fetchUserData() async {
+    try {
+      User? userData = Provider.of<AuthProvider>(context, listen: false).user;
+      if (userData != null) {
+        user = await Provider.of<AuthProvider>(context, listen: false)
+            .fetchUserById(userData.userId);
+      }
+      setState(() {
+        isLoading = false;
+      });
+    } catch (error) {
+      print('Error fetching user data: $error');
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -33,131 +56,99 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ClipRRect(
+      body: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blueAccent,
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(50),
-                bottomRight: Radius.circular(50),
+                bottomLeft: Radius.circular(70),
+                bottomRight: Radius.circular(70),
               ),
-              child: Container(
-                width: double.infinity,
-                height: 300,
-                color: Colors.blueAccent,
-                padding: EdgeInsets.all(40),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+            ),
+            padding: EdgeInsets.all(40),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "${user.name}",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
+                    Text('Kelompok 4',
+                        style: TextStyle(
+                            color: Colors.black,
                             fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(width: 10),
-                        Icon(
-                          Icons.notifications,
-                          color: Colors.white,
-                          size: 34,
-                        ),
-                      ],
+                            fontSize: 25)),
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: user?.image != null
+                          ? NetworkImage(user!.image!)
+                          : null,
+                      child: user?.image == null
+                          ? Icon(Icons.person, size: 100)
+                          : null,
                     ),
                   ],
                 ),
-              ),
+                SizedBox(height: 20),
+                Text(
+                  "Hi, ${user.name}",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 20),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                childAspectRatio: 1,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                padding: EdgeInsets.all(20),
-                children: <Widget>[
-                  MenuOption(
-                    icon: Icons.download,
-                    label: 'GetData',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GetDataScreen()),
-                      );
-                    },
-                  ),
-                  MenuOption(
-                    icon: Icons.web,
-                    label: 'Web View',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WebViewScreen()),
-                      );
-                    },
-                  ),
-                  MenuOption(
-                    icon: Icons.person,
-                    label: 'Profile',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProfileScreen()),
-                      );
-                    },
-                  ),
-                  MenuOption(
-                    icon: Icons.edit,
-                    label: 'ToDoList',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TodolistScreen()),
-                      );
-                    },
-                  ),
-                ],
-              ),
+          ),
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 2,
+              childAspectRatio: 1,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              padding: EdgeInsets.all(20),
+              children: <Widget>[
+                _buildMenuItem(Icons.image, 'Gallery', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GetDataScreen()),
+                  );
+                }),
+                _buildMenuItem(Icons.web, 'Web View', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WebViewScreen()),
+                  );
+                }),
+                _buildMenuItem(Icons.person, 'Profile', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                  );
+                }),
+                _buildMenuItem(Icons.edit, 'ToDoList', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TodolistScreen()),
+                  );
+                }),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-}
 
-class MenuOption extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  const MenuOption({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildMenuItem(IconData icon, String label, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
+      child: Card(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
+        elevation: 4,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -65,7 +65,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
-        backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -105,10 +104,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 );
               },
-              icon: Icon(Icons.edit),
-              label: Text('Edit Profile'),
+              icon: Icon(Icons.edit, color: Colors.white),
+              label:
+                  Text('Edit Profile', style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 50),
+                backgroundColor: Colors.blueAccent,
               ),
             ),
             SizedBox(height: 20),
@@ -137,10 +138,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 );
               },
-              icon: Icon(Icons.logout),
-              label: Text('Logout'),
+              icon: Icon(Icons.logout, color: Colors.white),
+              label: Text('Logout', style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 50),
+                backgroundColor: Colors.blueAccent,
               ),
             ),
           ],

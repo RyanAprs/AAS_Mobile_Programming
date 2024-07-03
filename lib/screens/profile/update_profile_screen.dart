@@ -125,8 +125,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update Profile'),
-        backgroundColor: Colors.blueAccent,
+        title: Text('Edit Profile'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -147,7 +146,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _pickImage(),
-              child: Text('Pick Image'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+              ),
+              child: Text('Pick Image', style: TextStyle(color: Colors.white)),
             ),
             SizedBox(height: 20),
             TextField(
@@ -162,7 +164,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _updateProfile,
-              child: Text('Update Profile'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+              ),
+              child: Text('Save', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
