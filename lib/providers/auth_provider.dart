@@ -26,6 +26,31 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<User> fetchUserById(String id) async {
+    try {
+      User fetchedUser = await _authService.getUserById(id);
+      return fetchedUser;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> updateProfile(
+      String id, String email, String name, String? image) async {
+    try {
+      await _authService.updateUser(id,name,  email, image);
+      _user = User(
+        userId: id,
+        email: email,
+        name: name,
+        image: image,
+      );
+      notifyListeners();
+    } catch (e) {
+      throw e;
+    }
+  }
+
   void logout() {
     _user = null;
     notifyListeners();

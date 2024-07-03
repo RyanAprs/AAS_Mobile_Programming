@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/providers/auth_provider.dart';
 import 'package:mobile/screens/login_screen.dart';
+import 'package:mobile/screens/profile/update_profile_screen.dart';
 import 'package:provider/provider.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
-  @override
-  _ProfileScreenState createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
   void signOutUser(BuildContext context) {
     Provider.of<AuthProvider>(context, listen: false).logout();
     Navigator.pushAndRemoveUntil(
@@ -31,7 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text('Profile'),
         backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
@@ -47,23 +43,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             SizedBox(height: 20),
             Text(
-              "${user.name}",
+              user.name ?? '',
               style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold),
+                color: Colors.black,
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
-              "${user.email}",
+              user.email ?? '',
               style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500),
+                color: Colors.black54,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: () {
-                // Navigate to edit profile screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UpdateProfileScreen(id: user.userId),
+                  ),
+                );
               },
               icon: Icon(Icons.edit),
               label: Text('Edit Profile'),
@@ -74,7 +77,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: () {
-                signOutUser(context);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: Text('Logout'),
+                    content: Text('Are you sure you want to logout?'),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: Text('Logout'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          signOutUser(context);
+                        },
+                      ),
+                    ],
+                  ),
+                );
               },
               icon: Icon(Icons.logout),
               label: Text('Logout'),
