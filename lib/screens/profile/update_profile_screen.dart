@@ -20,6 +20,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final TextEditingController _emailController = TextEditingController();
   File? _image;
   String? _imagePreview;
+  String? _existingImageUrl;
   double _progress = 0.0;
 
   @override
@@ -37,7 +38,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       if (user.image != null) {
         setState(() {
           _imagePreview = user.image;
+          _existingImageUrl = user.image;
         });
+        print(user.image);
       }
     } catch (error) {
       print('Error fetching user data: $error');
@@ -45,32 +48,32 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   void _pickImage() async {
-    // User? user = Provider.of<AuthProvider>(context, listen: false).user;
+    User? user = Provider.of<AuthProvider>(context, listen: false).user;
 
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
-      File file = File(result.files.first.name);
+      File file = File(result.files.single.path!);
 
       print(file.toString());
 
-      // setState(() {
-      //   _image = File(file);
-      //   _imagePreview = file;
-      // });
+      setState(() {
+        _image = file;
+        _imagePreview = file.path;
+      });
     } else {
       print("batal upload");
-      // if (user?.image != null) {
-      //   setState(() {
-      //     _image = File(user!.image!);
-      //     _imagePreview = user.image;
-      //   });
-      // } else {
-      //   setState(() {
-      //     _image = null;
-      //     _imagePreview = null;
-      //   });
-      // }
+      if (user?.image != null) {
+        setState(() {
+          _image = File(user!.image!);
+          _imagePreview = user.image;
+        });
+      } else {
+        setState(() {
+          _image = null;
+          _imagePreview = null;
+        });
+      }
     }
   }
 
@@ -97,7 +100,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           _updateUserData(imageUrl);
         });
       } else {
-        _updateUserData(null);
+        _updateUserData(_existingImageUrl);
       }
     } catch (error) {
       print('Error uploading image: $error');
@@ -133,7 +136,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             _imagePreview != null
                 ? CircleAvatar(
                     radius: 100,
-                    backgroundImage: FileImage(File(_imagePreview!)),
+                    backgroundImage: _image != null
+                        ? FileImage(File(_imagePreview!))
+                        : NetworkImage(_imagePreview!) as ImageProvider,
                   )
                 : CircleAvatar(
                     radius: 100,
@@ -164,4 +169,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: UpdateProfileScreen(
+        id: 'user-id'), // Replace 'user-id' with actual user ID
+  ));
 }

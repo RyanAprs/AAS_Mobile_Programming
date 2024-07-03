@@ -5,8 +5,37 @@ import 'package:mobile/screens/login_screen.dart';
 import 'package:mobile/screens/profile/update_profile_screen.dart';
 import 'package:provider/provider.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  User? user;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  void fetchUserData() async {
+    try {
+      User? userData = Provider.of<AuthProvider>(context, listen: false).user;
+      if (userData != null) {
+        user = await Provider.of<AuthProvider>(context, listen: false)
+            .fetchUserById(userData.userId);
+      }
+      setState(() {
+        isLoading = false;
+      });
+    } catch (error) {
+      print('Error fetching user data: $error');
+    }
+  }
 
   void signOutUser(BuildContext context) {
     Provider.of<AuthProvider>(context, listen: false).logout();
@@ -19,7 +48,15 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User? user = Provider.of<AuthProvider>(context).user;
+    if (isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Profile'),
+          backgroundColor: Colors.blueAccent,
+        ),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     if (user == null) {
       return LoginScreen();
@@ -38,12 +75,12 @@ class ProfileScreen extends StatelessWidget {
             CircleAvatar(
               radius: 100,
               backgroundImage:
-                  user.image != null ? NetworkImage(user.image!) : null,
-              child: user.image == null ? Icon(Icons.person, size: 100) : null,
+                  user?.image != null ? NetworkImage(user!.image!) : null,
+              child: user?.image == null ? Icon(Icons.person, size: 100) : null,
             ),
             SizedBox(height: 20),
             Text(
-              user.name ?? '',
+              user?.name ?? '',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 25,
@@ -51,7 +88,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             Text(
-              user.email ?? '',
+              user?.email ?? '',
               style: TextStyle(
                 color: Colors.black54,
                 fontSize: 18,
@@ -64,7 +101,7 @@ class ProfileScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => UpdateProfileScreen(id: user.userId),
+                    builder: (context) => UpdateProfileScreen(id: user!.userId),
                   ),
                 );
               },

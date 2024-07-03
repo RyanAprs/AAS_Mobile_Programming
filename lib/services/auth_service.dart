@@ -42,7 +42,7 @@ class AuthService {
     }
   }
 
-   Future<User> getUserById(String id) async {
+  Future<User> getUserById(String id) async {
     final response = await http.get(
       Uri.parse('$baseUrl/user/$id'),
     );
@@ -55,7 +55,7 @@ class AuthService {
   }
 
   Future<void> updateUser(
-      String id, String email, String name, String? image) async {
+      String id, String name, String email, String? image) async {
     final response = await http.put(
       Uri.parse('$baseUrl/user/$id'),
       headers: <String, String>{

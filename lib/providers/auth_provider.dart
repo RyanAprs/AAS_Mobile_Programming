@@ -36,13 +36,13 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> updateProfile(
-      String id, String email, String name, String? image) async {
+      String id, String name, String email, String? image) async {
     try {
-      await _authService.updateUser(id,name,  email, image);
+      await _authService.updateUser(id, name, email, image);
       _user = User(
         userId: id,
-        email: email,
         name: name,
+        email: email,
         image: image,
       );
       notifyListeners();
